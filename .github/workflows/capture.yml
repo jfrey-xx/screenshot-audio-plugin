@@ -10,9 +10,11 @@ jobs:
         target: [macos-universal]
     runs-on: macos-13
     steps:
-      - name: fake screenshot
+      - name: dummy screenshot
         run: |
-          touch screenshot.jpg
+          open ~
+          sleep 2
+          screencapture screenshot.jpg
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
