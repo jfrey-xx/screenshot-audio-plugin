@@ -7,7 +7,7 @@ jobs:
   macos:
     strategy:
       matrix:
-        target: [macos-universal]
+        target: [macos-intel, macos-universal]
     runs-on: macos-13
     steps:
       - name: install carla
@@ -25,8 +25,19 @@ jobs:
           sleep 2
           screencapture screenshot.jpg
           kill -9 %1
+      - name: launch plugin and screenshot
+        run: |
+          CARLA_BRIDGE_DUMMY=1 ./carla/Carla.app/Contents/MacOS/carla-bridge-native vst2 ~/Library/Audio/Plug-Ins/VST/Nekobi.vst "" &
+          sleep 2
+          screencapture screenshot2.jpg
+          kill -9 %1
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: screenshot1
           path: ./screenshot.jpg
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: screenshot2
+          path: ./screenshot2.jpg
