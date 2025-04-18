@@ -10,11 +10,21 @@ jobs:
         target: [macos-universal]
     runs-on: macos-13
     steps:
-      - name: dummy screenshot
+      - name: install carla
         run: |
-          open ~
+          curl -L https://github.com/falkTX/Carla/releases/download/v2.5.9/Carla-2.5.9-macOS-universal.dmg > carla.dmg
+          hdiutil attach carla.dmg -mountpoint ./carla
+      - name: install plugin
+        run: |
+          curl -L https://github.com/DISTRHO/DPF-Plugins/releases/download/v1.7/DPF-Plugins-v1.7-macos-universal.dmg > plugin.dmg
+          hdiutil attach plugin.dmg -mountpoint ./plugin
+          installer -pkg ./plugin/DPF-Plugins-AudioPlugins.pkg -target CurrentUserHomeDirectory
+      - name: launch plugin and screenshot
+        run: |
+          CARLA_BRIDGE_DUMMY=1 ./carla/Carla.app/Contents/MacOS/carla-bridge-native vst3 ~/Library/Audio/Plug-Ins/VST3/glBars.vst3 "" &
           sleep 2
           screencapture screenshot.jpg
+          kill -9 %1
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
