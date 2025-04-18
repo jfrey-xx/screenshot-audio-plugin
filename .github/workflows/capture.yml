@@ -1,0 +1,15 @@
+
+name: Capture Plugin
+on: [push, pull_request]
+
+jobs:
+
+  macos:
+    strategy:
+      matrix:
+        target: [macos-universal]
+    runs-on: macos-13
+    steps:
+      - uses: NinjaManatee/desktop-screenshot-action@1.0
+        with:
+          file-name: 'desktop.jpg'
